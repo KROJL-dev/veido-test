@@ -1,0 +1,146 @@
+[
+  {
+    "id": 191,
+    "name": "GVC",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 40
+  },
+  {
+    "id": 203,
+    "name": "GCS",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 4
+  },
+  {
+    "id": 196,
+    "name": "MVT",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 25
+  },
+  {
+    "id": 197,
+    "name": "PTC",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 46
+  },
+  {
+    "id": 193,
+    "name": "ITA",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 25
+  },
+  {
+    "id": 192,
+    "name": "ICP",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 18
+  },
+  {
+    "id": 195,
+    "name": "MVP",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 18
+  },
+  {
+    "id": 194,
+    "name": "MAG",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 78
+  },
+  {
+    "id": 1,
+    "name": "MTA",
+    "phone_number": "+13477688713",
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "contract",
+    "status": "active",
+    "users_count": 1
+  },
+  {
+    "id": 198,
+    "name": "AVL",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 1
+  },
+  {
+    "id": 199,
+    "name": "SDJ",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 1
+  },
+  {
+    "id": 200,
+    "name": "SGB",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 1
+  },
+  {
+    "id": 201,
+    "name": "SGO",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 1
+  },
+  {
+    "id": 202,
+    "name": "SAB",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 1
+  },
+  {
+    "id": 204,
+    "name": "ALL",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 1
+  },
+  {
+    "id": 205,
+    "name": "ABC",
+    "phone_number": null,
+    "logo": "https://storage.googleapis.com/myle/assets/companies/affiliate_icon.jpg",
+    "type": "affiliate",
+    "status": "active",
+    "users_count": 1
+  }
+]
