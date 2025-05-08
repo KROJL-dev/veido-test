@@ -1,7 +1,9 @@
-import AppReducer from './app/reducer';
+import AppReducer, { type State } from "./app/reducer";
 
-const reducers = {
-  app: AppReducer,
+import type { Reducer } from "@reduxjs/toolkit";
+
+const reducers: { app: Reducer<State> } = {
+	app: AppReducer,
 };
 
 export default reducers;
