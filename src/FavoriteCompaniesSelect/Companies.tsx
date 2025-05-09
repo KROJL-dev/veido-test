@@ -6,11 +6,11 @@ import {
 	FormControl,
 	Icon,
 	IconButton,
-	Input,
 	InputLabel,
 	MenuItem,
+	Select,
+	type SelectChangeEvent,
 } from "@mui/material";
-import Select from "../Select/Select";
 
 import type { Company } from "../services/app/reducer";
 import { actions } from "../services";
@@ -54,39 +54,44 @@ const COMPANY_STATS: CompanyStats = company_stats_data;
 const INPUT_PROPS = { name: "company_ids" };
 const INPUT_LABEL_STYLE_PROPS = { background: "#fff" };
 
-const renderMenuItem = ({
+interface IP {
+	id: number;
+	title: string;
+	icon: string;
+	color: string;
+	toggleFunction?: (e: React.MouseEvent) => void;
+	isProcessing?: boolean;
+	value: number;
+}
+const RenderMenuItem: React.FC<IP> = ({
 	id,
 	title,
 	icon,
 	color,
 	toggleFunction,
 	isProcessing = false,
-}: {
-	id: number;
-	title: string;
-	icon: string;
-	color: string;
-	toggleFunction?: (e: React.MouseEvent, id: number) => void;
-	isProcessing?: boolean;
-}) => (
-	<MenuItem key={id} value={id} sx={{ pt: "2px", pb: "2px" }}>
-		<IconButton
-			className="favourite-icon"
-			size="small"
-			color="primary"
-			onClick={(event) => toggleFunction?.(event, id)}
-		>
-			<Icon style={{ color }}>
-				{isProcessing ? (
-					<CircularProgress style={{ maxWidth: 24, maxHeight: 24 }} />
-				) : (
-					icon
-				)}
-			</Icon>
-		</IconButton>
-		<div style={{ width: "100%", padding: "8px 5px" }}>{title}</div>
-	</MenuItem>
-);
+	...props
+}) => {
+	return (
+		<MenuItem {...props} key={id} sx={{ pt: "2px", pb: "2px" }}>
+			<IconButton
+				className="favourite-icon"
+				size="small"
+				color="primary"
+				onClick={toggleFunction}
+			>
+				<Icon style={{ color }}>
+					{isProcessing ? (
+						<CircularProgress style={{ maxWidth: 24, maxHeight: 24 }} />
+					) : (
+						icon
+					)}
+				</Icon>
+			</IconButton>
+			<div style={{ width: "100%", padding: "8px 5px" }}>{title}</div>
+		</MenuItem>
+	);
+};
 
 const Companies: React.FC<CompaniesProps> = (props) => {
 	const companies = useSelector((state: RootState) => state.app.companies);
@@ -94,6 +99,12 @@ const Companies: React.FC<CompaniesProps> = (props) => {
 	const [selectedFavoriteCompanies, setSelectedFavoriteCompanies] = useState<
 		number[]
 	>([]);
+	const [currentFavoritesCompanies, setCurrentFavoritesCompanies] = useState<
+		number[]
+	>([]);
+
+	const setFavoriteCompanies = (data: number[]) =>
+		actions.appActions.setFavoriteCompanies(data)();
 
 	const filteredCompaniesByType = useMemo(
 		(): Company[] =>
@@ -106,80 +117,124 @@ const Companies: React.FC<CompaniesProps> = (props) => {
 	);
 
 	const onChange = useCallback(
-		({ target: { value } }: { target: { value: number[] } }) =>
-			props.changeCompany(value.includes(ALL_DATA_FORMAT.key) ? [] : value),
+		({ target: { value } }: SelectChangeEvent<number[]>) => {
+			props.changeCompany(
+				Array.isArray(value) && value.includes(ALL_DATA_FORMAT.key)
+					? []
+					: (value as number[]),
+			);
+		},
 		[props],
 	);
 
-	const favoriteCompanies = useMemo(
-		() => actions.appActions.getFavoriteCompanies()(),
-		[],
-	);
-
 	const options = useMemo(() => {
-		const favIds = new Set(favoriteCompanies);
+		const onToggle =
+			(companyId: number) => (e: MouseEvent<Element, MouseEvent>) => {
+				e.stopPropagation();
+				setCurrentFavoritesCompanies((prev) =>
+					prev.includes(companyId)
+						? (() => {
+								setSelectedFavoriteCompanies((prevSelected) =>
+									prevSelected.filter(
+										(prevSelectedId) => prevSelectedId !== companyId,
+									),
+								);
+								return prev.filter((id) => id !== companyId);
+							})()
+						: [...prev, companyId],
+				);
+			};
 		return [
-			renderMenuItem({
-				id: ALL_DATA_FORMAT.key,
-				// name: company.name,
-				title: ALL_DATA_FORMAT.title,
-				icon: "star",
-				color: "rgb(203, 15, 21)",
-			}),
+			<RenderMenuItem
+				key={ALL_DATA_FORMAT.key}
+				id={ALL_DATA_FORMAT.key}
+				value={+ALL_DATA_FORMAT.key}
+				title={ALL_DATA_FORMAT.title}
+				icon="star"
+				color="rgb(203, 15, 21)"
+			/>,
+
 			...filteredCompaniesByType
-				.filter((c) => !favIds.has(c.id))
+				.sort(
+					(companyA, companyB) =>
+						+selectedFavoriteCompanies.includes(companyB.id) -
+						+selectedFavoriteCompanies.includes(companyA.id),
+				)
 				.map((company: Company) => {
 					const stats = props.getCompanyStats
 						? props.getCompanyStats(company)
 						: COMPANY_STATS[company.id]?.routes_count || 0;
 
-					return renderMenuItem({
-						id: company.id,
-						// name: company.name,
-						title: `${company.name}${props.hideStats ? "" : ` - ${stats}`}`,
-						icon: selectedFavoriteCompanies.includes(company.id)
-							? "star"
-							: "star_outline",
-						color: "rgba(99,97,97,0.89)",
-						toggleFunction: () => {
-							setSelectedFavoriteCompanies((prev) =>
-								prev.includes(company.id)
-									? prev.filter((id) => id !== company.id)
-									: [...prev, company.id],
-							);
-						},
-						isProcessing: false,
-					});
+					return (
+						<RenderMenuItem
+							key={company.id}
+							id={company.id}
+							title={`${company.name}${props.hideStats ? "" : ` - ${stats}`}`}
+							icon={
+								currentFavoritesCompanies.includes(company.id) ||
+								selectedFavoriteCompanies.includes(company.id)
+									? "star"
+									: "star_outline"
+							}
+							value={company.id}
+							color={
+								selectedFavoriteCompanies.includes(company.id)
+									? "rgb(255, 179, 0)"
+									: currentFavoritesCompanies.includes(company.id)
+										? "rgba(99,97,97,0.89)"
+										: ""
+							}
+							toggleFunction={onToggle(company.id)}
+						/>
+					);
 				}),
 		];
 	}, [
-		favoriteCompanies,
-		filteredCompaniesByType,
-		props,
 		selectedFavoriteCompanies,
+		filteredCompaniesByType,
+		props.getCompanyStats,
+		props.hideStats,
+		currentFavoritesCompanies,
 	]);
 
 	const renderValue = useCallback(() => {
+		if (
+			!props.company_ids?.length ||
+			props.company_ids.includes(ALL_DATA_FORMAT.key)
+		) {
+			if (props.showCountValues) return props.allName || "All";
+			return props.allName || ALL_DATA_FORMAT.title;
+		}
+
 		if (props.showCountValues)
-			return props.company_ids?.length === 0
-				? props.allName || "All"
-				: `${props.company_ids?.length} ${
-						props.fullText
-							? props.company_ids?.length > 1
-								? "Companies"
-								: "Company"
-							: "Comp"
-					}`;
-		return props.company_ids.length === 0 ||
-			props.company_ids.includes(ALL_DATA_FORMAT.key) ? (
-			<>{props.allName || ALL_DATA_FORMAT.title}</>
-		) : (
-			filteredCompaniesByType
-				.filter((c) => props.company_ids.includes(c.id))
-				.map((c) => c.name)
-				.join(", ")
-		);
-	}, [props, filteredCompaniesByType]);
+			return `${props.company_ids?.length} Compan${
+				props.company_ids?.length > 1 ? "ies" : "y"
+			}`;
+
+		return filteredCompaniesByType
+			.filter((c) => props.company_ids.includes(c.id))
+			.map((c) => c.name)
+			.join(", ");
+	}, [
+		props.company_ids,
+		props.showCountValues,
+		props.allName,
+		filteredCompaniesByType,
+	]);
+
+	const onClose = useCallback(() => {
+		props.onClose?.();
+		setFavoriteCompanies(currentFavoritesCompanies);
+		setSelectedFavoriteCompanies(currentFavoritesCompanies);
+	}, [props.onClose, currentFavoritesCompanies]);
+
+	const onOpen = useCallback(() => {
+		const favoritesCompanyArr = actions.appActions.getFavoriteCompanies()();
+
+		setSelectedFavoriteCompanies(favoritesCompanyArr);
+		setCurrentFavoritesCompanies(favoritesCompanyArr);
+		props?.onOpen?.();
+	}, [props?.onOpen]);
 
 	return (
 		<FormControl
@@ -194,19 +249,18 @@ const Companies: React.FC<CompaniesProps> = (props) => {
 
 			<Select
 				label="favorite companies"
-				className="companies-select"
+				className="select-form-control companies-select"
 				labelId="favorite_companies_select"
 				id="favorite_companies_select_id"
 				multiple
 				inputProps={INPUT_PROPS}
 				displayEmpty
 				value={props.company_ids}
-				changed={onChange}
-				input={<Input />}
+				onChange={onChange}
 				renderValue={renderValue}
-				onClose={props.onClose}
+				onClose={onClose}
 				variant={props.variant || "outlined"}
-				onOpen={props.onOpen}
+				onOpen={onOpen}
 			>
 				{options}
 			</Select>

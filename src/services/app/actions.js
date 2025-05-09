@@ -6,6 +6,7 @@ export function getFavoriteCompanies() {
 		const ids = JSON.parse(
 			localStorage.getItem(FAVORITE_COMPANIES_SELECT_FILTER),
 		);
+		console.log("ids", ids);
 		if (!ids || !ids.length) {
 			return [];
 		}
@@ -13,6 +14,7 @@ export function getFavoriteCompanies() {
 	};
 }
 export function setFavoriteCompanies(data) {
+	console.log("data", data);
 	return function () {
 		localStorage.setItem(
 			FAVORITE_COMPANIES_SELECT_FILTER,

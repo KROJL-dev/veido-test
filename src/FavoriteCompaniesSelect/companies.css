@@ -4,3 +4,15 @@
     width: 137px;
     max-width: 173px;
 }
+
+.select-form-control {
+    height: 35px;
+    min-width: 75px !important;
+    margin-right: 10px !important;
+}
+
+.select-form-control:hover:not(.Mui-disabled):before,
+.select-form-control:before,
+.select-form-control:after {
+    border-bottom: none !important;
+}
